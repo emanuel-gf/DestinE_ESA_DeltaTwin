@@ -1,0 +1,14 @@
+# S3 Endpoint Configuration
+endpoint_url: 'https://eodata.dataspace.copernicus.eu'
+endpoint_stac: 'https://stac.dataspace.copernicus.eu/v1/'
+bucket_name: 'eodata'
+
+bands:
+  - 'B02'
+  - 'B03'
+  - 'B04'
+
+# Query Configuration
+query:
+  max_items: 1000
+

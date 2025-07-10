@@ -1,0 +1,14 @@
+DATASET:
+  bands:
+  - B02
+  - B03
+  - B04
+  base_dir: /mnt/disk/dataset/sentinel-ai-processor
+  version: V3
+ENDPOINTS:
+  bucket_name: eodata
+  stac: https://stac.dataspace.copernicus.eu/v1/
+  url: ttps://eodata.dataspace.copernicus.eu
+WANDB:
+  project_name: stac_query_most_recent
+  track: true

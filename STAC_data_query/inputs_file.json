@@ -1,0 +1,22 @@
+{
+    "bbox_min_lon": {
+      "type": "number",
+      "value": 3.2833
+    },
+    "bbox_min_lat": {
+      "type": "number",
+      "value": 45.3833
+    },
+    "bbox_max_lon": {
+      "type": "number",
+      "value": 11.2
+    },
+    "bbox_max_lat": {
+      "type": "number",
+      "value": 50.1833
+    },
+    "max_cloud_cover": {
+      "type": "integer",
+      "value": 20
+    }
+  }

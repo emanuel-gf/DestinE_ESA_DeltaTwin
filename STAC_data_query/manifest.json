@@ -1,0 +1,91 @@
+{
+    "name": "stac_query_most_recent",
+    "description": "Prototype version of querying STAC catalog for most recent Sentinel-2 L1C and L2A items.",
+    "license": {
+        "name": "LGPLv3",
+        "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
+        "description": "",
+        "copyrights": [
+            {
+                "years": [
+                    2025
+                ],
+                "company": "European Space Agency"
+            }
+        ]
+    },
+    "owner": "emanuel.goulart",
+    "inputs": {
+        "bbox_min_lon": {
+            "type": "number",
+            "description": "Minimum longitude of the bounding box (e.g., 3.2833)"
+        },
+        "bbox_min_lat": {
+            "type": "number",
+            "description": "Minimum latitude of the bounding box (e.g., 45.3833)"
+        },
+        "bbox_max_lon": {
+            "type": "number",
+            "description": "Maximum longitude of the bounding box (e.g., 11.2)"
+        },
+        "bbox_max_lat": {
+            "type": "number",
+            "description": "Maximum latitude of the bounding box (e.g., 50.1833)"
+        },
+        "max_cloud_cover": {
+            "type": "integer",
+            "description": "Maximum cloud cover percentage (e.g., 20)"
+        }
+    },
+    "outputs": {
+        "stac_items": {
+            "type": "Data",
+            "description": "STAC dictionary containing L1C and L2A as a json file"
+        }
+    },
+    "models": {
+        "stac_query": {
+            "path": "models",
+            "type": "python",
+            "parameters": {
+                "pythonVersion": "3.12.2",
+                "pipRequirements": [
+                { "name": "numpy", "version": "1.26.4" },
+                { "name": "pandas", "version": "2.2.3" },
+                { "name": "pystac-client", "version": "0.8.6" },
+                { "name": "dotenv", "version": "0.9.9" },
+                { "name": "loguru", "version": "0.7.3" },
+                { "name": "PyYAML", "version": "6.0.1" }
+                ],
+                "hardwareRequirements": {
+                    "cpu": "2000m",
+                    "ram": "3Gi"
+                },
+                "command": "python main.py $(inputs.bbox_min_lon) $(inputs.bbox_min_lat) $(inputs.bbox_max_lon) $(inputs.bbox_max_lat) $(inputs.max_cloud_cover)"
+            },
+            "inputs": {
+                "bbox_min_lon": {
+                    "type": "number"
+                },
+                "bbox_min_lat": {
+                    "type": "number"
+                },
+                "bbox_max_lon": {
+                    "type": "number"
+                },
+                "bbox_max_lat": {
+                    "type": "number"
+                },
+                "max_cloud_cover": {
+                    "type": "integer"
+                }
+            },
+            "outputs": {
+                "stac_items": {
+                    "type": "Data",
+                    "glob": "stac_items.json"
+                }
+            }
+        }
+    }
+}
