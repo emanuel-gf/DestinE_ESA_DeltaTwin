@@ -1,0 +1,29 @@
+nodes:
+  - id: cdse_key
+    ref: inputs.cdse_key
+  - id: cdse_secret
+    ref: inputs.cdse_secret
+  - id: bands
+    ref: inputs.bands
+  - id: get_product
+    ref: models.get_product
+  - id: l1c_raw
+    ref: outputs.l1c_raw
+  - id: l2a_raw
+    ref: outputs.l2a_raw
+edges:
+  - from:
+      id: cdse_key
+    to:
+      id: get_product
+      port: cdse_key
+  - from:
+      id: cdse_secret
+    to:
+      id: get_product
+      port: cdse_secret
+  - from:
+      id: bands
+    to:
+      id: get_product
+      port: bands

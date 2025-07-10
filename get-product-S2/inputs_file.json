@@ -1,0 +1,14 @@
+{
+  "cdse_key": {
+      "type": "string",
+      "value": "2EZ52XUQGE76QUDQWP2I"
+  },
+  "cdse_secret": {
+      "type": "string",
+      "value": "5QhCzEV7YqnznzDrFtiHANkhmSeimySgqhUg8PlA"
+  },
+  "bands":{
+      "type":"string",
+      "value": "B02,B03,B04"
+  }
+}
