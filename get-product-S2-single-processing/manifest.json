@@ -1,5 +1,5 @@
 {
-    "name": "get-sen2-products-from-s3",
+    "name": "get-sen2-products-from-s3-single",
     "description": "Prototype version of querying STAC catalog for most recent Sentinel-2 L1C and L2A items.",
     "license": {
         "name": "LGPLv3",
@@ -27,16 +27,20 @@
         "bands":{
             "type":"string",
             "description":"Sentinel-2 Bands (e.g: B02,B03,B04)"
+        },
+        "product_level":{
+            "type":"string",
+            "description":"Level of processing for Sentinel-2 (e.g: L2A OR L1C)"
+        },
+        "stac_item":{
+            "type":"string",
+            "description":"A STAC ITEM transformed in a dictionary and stored on a json."
         }
     },
     "outputs": {
-        "l1c_raw": {
+        "S2_raw": {
             "type": "Data",
             "description": "A np.ndarray compressed format representing L1C product"
-        },
-        "l2a_raw" :{
-            "type": "Data",
-            "description":"A np.ndarray compressed format representing LA2 product"
         }
     },
     "models": {
@@ -61,7 +65,7 @@
                     "cpu": "4000m",
                     "ram": "4Gi"
                 },
-                "command": "python main.py $(inputs.cdse_key) $(inputs.cdse_secret) $(inputs.bands)"
+                "command": "python main.py $(inputs.cdse_key) $(inputs.cdse_secret) $(inputs.bands) $(inputs.product_level) $(inputs.stac_item)"
             },
             "inputs": {
                 "cdse_key": {
@@ -72,16 +76,18 @@
                 },
                 "bands": {
                     "type": "string"
+                },
+                "product_level":{
+                    "type":"string"
+                },
+                "stac_item":{
+                    "type":"string"
                 }
             },
             "outputs": {
-                "l1c_raw": {
+                "S2_raw": {
                     "type": "Data",
-                    "glob": "l1c_raw.npz"
-                },
-                "l2a_raw":{
-                    "type":"Data",
-                    "glob":"l2a_raw.npz"
+                    "glob": "S2_$(inputs.product_level)_raw.npz"
                 }
             }
         }

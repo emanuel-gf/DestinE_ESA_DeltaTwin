@@ -9,6 +9,14 @@
   },
   "bands":{
       "type":"string",
-      "value": "B02,B03,B04"
+      "value": "B02,B03"
+  },
+  "product_level":{
+    "type":"string",
+    "value": "L2A"
+  },
+  "stac_item":{
+    "type":"string",
+    "value": "stac_items.json"
   }
 }

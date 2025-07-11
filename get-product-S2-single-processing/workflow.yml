@@ -5,12 +5,14 @@ nodes:
     ref: inputs.cdse_secret
   - id: bands
     ref: inputs.bands
+  - id: product_level
+    ref: inputs.product_level
+  - id: stac_item
+    ref: inputs.stac_item
   - id: get_product
     ref: models.get_product
-  - id: output_l1c_raw
-    ref: outputs.l1c_raw
-  - id: output_l2a_raw
-    ref: outputs.l2a_raw
+  - id: output_S2_raw
+    ref: outputs.S2_raw
 edges:
   - from:
       id: cdse_key
@@ -28,12 +30,17 @@ edges:
       id: get_product
       port: bands
   - from:
-      id: get_product
-      port: l1c_raw
+      id: product_level
     to:
-      id: output_l1c_raw
+      id: get_product
+      port: product_level
+  - from:
+      id: stac_item
+    to:
+      id: get_product
+      port: stac_item
   - from:
       id: get_product
-      port: l2a_raw
+      port: S2_raw
     to:
-      id: output_l2a_raw
+      id: output_S2_raw

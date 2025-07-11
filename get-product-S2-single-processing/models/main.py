@@ -39,7 +39,8 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('cdse_key', type=str, help="CDSE Key")
     parser.add_argument('cdse_secret', type=str, help="CDSE Secret Value")
     parser.add_argument('bands', type=str, help="List of bands to be extracted. Should match the exact name of the catalogue. (e.g: 'B02,B03,B04')")
-    
+    parser.add_argument('product_level', type=str, help="Product Level regarding S3 catalogue. (e.g: L1C OR L2A)")
+    parser.add_argument('stac_item', type=str, help="Path to a json containing STAC Item dict objects.")
     return parser.parse_args()
 
 
@@ -62,7 +63,7 @@ def parse_bands(bands_string: str) -> list[str]:
     return [band.strip() for band in bands_string.split(',')]
 
 
-def initialize_env(key_id:str, secret_key: str, bands_str: str ) -> dict:
+def initialize_env(key_id:str, secret_key: str, bands_str: str, product_level=str, stac_item=str) -> dict:
     """Load environment variables."""
     try:
         load_dotenv()
@@ -70,12 +71,13 @@ def initialize_env(key_id:str, secret_key: str, bands_str: str ) -> dict:
         return {
             "access_key_id": str(key_id),
             "secret_access_key": str(secret_key),
-            "bands":parse_bands(bands_str)
+            "bands":parse_bands(bands_str),
+            "product_level":str(product_level),
+            "stac_item":str(stac_item)
         }
     except Exception as e:
         logger.error(f"Failed to load environment variables: {e}")
         return {}
-
 
 
 def main() -> None:
@@ -90,13 +92,21 @@ def main() -> None:
     env = initialize_env(
         key_id=args.cdse_key,
         secret_key=args.cdse_secret, 
-        bands_str = args.bands
+        bands_str = args.bands,
+        product_level= args.product_level,
+        stac_item = args.stac_item
     )
 
     dir_path = os.getcwd()
     #print(dir_path)
 
+    # Fetch Data
+    bands = env["bands"]
+    product_level = env["product_level"]
+    path_stac_json = env["stac_item"]
 
+    logger.debug(f"Name of the variables from environment: Bands:{bands} Product_level{product_level} Stac_json{path_stac_json}")
+    
     model_cfg = load_config(f"{dir_path}/src/cfg/config.yaml")
     query_cfg = load_config(f"{dir_path}/src/cfg/query_config.yaml")
 
@@ -107,30 +117,29 @@ def main() -> None:
     ## Connect S3 
     s3, s3_client = connect_to_s3(endpoint_url, env["access_key_id"], env["secret_access_key"])
  
-    # Fetch data
-    bands = env["bands"]
 
     ## Load the catalog given by the DEPENDECIE - STAC-DATA-QUERY
-    path_stac_json = 'stac_items.json'
     with open(path_stac_json, 'r') as file:
         data_stac = json.load(file)
     
-    l1c_item = pystac.Item.from_dict(data_stac['L1C'])
-    l2a_item = pystac.Item.from_dict(data_stac['L2A'])
+    ## Capital Letters
+    product_level = str(product_level.upper())
+    Sentinel_item = pystac.Item.from_dict(data_stac[product_level])
+    #l2a_item = pystac.Item.from_dict(data_stac['L2A'])
 
     ## Load from S3 - SERVICE
-    l1c_raw_data = load_bands_from_s3(s3_client, bucket_name, l1c_item, bands)
-    l2a_raw_data = load_bands_from_s3(s3_client, bucket_name, l2a_item, bands, product_level="L2A")
+    Sentinel_raw_data = load_bands_from_s3(s3_client, bucket_name, Sentinel_item, bands, product_level=product_level)
+    #l2a_raw_data = load_bands_from_s3(s3_client, bucket_name, l2a_item, bands, product_level="L2A")
 
     ## Save the S2 image as a np compressed format. At the Root 
-    filename_l1c = './l1c_raw'
-    filename_l2a = './l2a_raw'
+    filename_output = f"./S2_{product_level}_raw"
     
-    logger.info(f'Saving the files at: {filename_l1c} & {filename_l2a}')
+    logger.info(f'Saving the files at: {filename_output}')
 
     try:
-        np.savez_compressed(filename_l1c, array=l1c_raw_data)
-        np.savez_compressed(filename_l2a, array=l2a_raw_data)
+        np.savez_compressed(filename_output, array=Sentinel_raw_data)
+        #np.savez_compressed(filename_l2a, array=l2a_raw_data)
+    
     
     except Exception as e:
         logger.error(f"Failed to generate json: {e}")
