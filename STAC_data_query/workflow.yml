@@ -11,7 +11,7 @@ nodes:
     ref: inputs.max_cloud_cover
   - id: stac_query
     ref: models.stac_query
-  - id: stac_items
+  - id: output_stac_items
     ref: outputs.stac_items
 edges:
   - from:
@@ -39,3 +39,8 @@ edges:
     to:
       id: stac_query
       port: max_cloud_covery
+  - from:  ## Important!! 
+      id: stac_query  # From models - Source Node of the edge
+      port: stac_items   #Output of the model described on the manifest
+    to:
+      id: output_stac_items # id of an existing node identifier from the list of the nodes above (⚠️ different from from.id)

@@ -12,7 +12,7 @@ cd STAC_data_query/models
 ```
 Run 
 ```bash
-python main.py --bbox "3.2833,45.3833,11.2,50.1833" --cloud-cover 20
+python main.py 3.2833 45.3833 11.2 50.1833 20
 ```
 
 To ask for help: 
