@@ -16,21 +16,9 @@
     },
     "owner": "emanuel.goulart",
     "inputs": {
-        "bbox_min_lon": {
-            "type": "number",
-            "description": "Minimum longitude of the bounding box (e.g., 3.2833)"
-        },
-        "bbox_min_lat": {
-            "type": "number",
-            "description": "Minimum latitude of the bounding box (e.g., 45.3833)"
-        },
-        "bbox_max_lon": {
-            "type": "number",
-            "description": "Maximum longitude of the bounding box (e.g., 11.2)"
-        },
-        "bbox_max_lat": {
-            "type": "number",
-            "description": "Maximum latitude of the bounding box (e.g., 50.1833)"
+        "bbox": {
+            "type": "string",
+            "description": "Comma-separated string of coordinates -> 'min_lon,min_lat,max_lon,max_lat' (e.g:'3.2833,45.3833,11.2,50.1833') "
         },
         "max_cloud_cover": {
             "type": "integer",
@@ -61,20 +49,11 @@
                     "cpu": "2000m",
                     "ram": "3Gi"
                 },
-                "command": "python main.py $(inputs.bbox_min_lon) $(inputs.bbox_min_lat) $(inputs.bbox_max_lon) $(inputs.bbox_max_lat) $(inputs.max_cloud_cover)"
+                "command": "python main.py $(inputs.bbox) $(inputs.max_cloud_cover)"
             },
             "inputs": {
-                "bbox_min_lon": {
-                    "type": "number"
-                },
-                "bbox_min_lat": {
-                    "type": "number"
-                },
-                "bbox_max_lon": {
-                    "type": "number"
-                },
-                "bbox_max_lat": {
-                    "type": "number"
+                "bbox": {
+                    "type": "string"
                 },
                 "max_cloud_cover": {
                     "type": "integer"

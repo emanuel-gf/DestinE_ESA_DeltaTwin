@@ -1,12 +1,6 @@
 nodes:
-  - id: bbox_min_lon
-    ref: inputs.bbox_min_lon
-  - id: bbox_min_lat
-    ref: inputs.bbox_min_lat
-  - id: bbox_max_lon
-    ref: inputs.bbox_max_lon
-  - id: bbox_max_lat
-    ref: inputs.bbox_max_lat
+  - id: bbox
+    ref: inputs.bbox
   - id: max_cloud_cover
     ref: inputs.max_cloud_cover
   - id: stac_query
@@ -15,25 +9,10 @@ nodes:
     ref: outputs.stac_items
 edges:
   - from:
-      id: bbox_min_lat
+      id: bbox
     to:
       id: stac_query
-      port: bbox_min_lat
-  - from:
-      id: bbox_min_lon
-    to:
-      id: stac_query
-      port: bbox_min_lon
-  - from:
-      id: bbox_max_lat
-    to:
-      id: stac_query
-      port: bbox_max_lat
-  - from:
-      id: bbox_max_lon
-    to:
-      id: stac_query
-      port: bbox_max_lon
+      port: bbox
   - from:
       id: max_cloud_cover
     to:
