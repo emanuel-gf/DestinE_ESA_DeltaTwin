@@ -33,7 +33,7 @@
             "description":"Level of processing for Sentinel-2 (e.g: L2A OR L1C)"
         },
         "stac_item":{
-            "type":"string",
+            "type":"Data",
             "description":"A STAC ITEM transformed in a dictionary and stored on a json."
         }
     },
@@ -81,7 +81,7 @@
                     "type":"string"
                 },
                 "stac_item":{
-                    "type":"string"
+                    "type":"Data"
                 }
             },
             "outputs": {
