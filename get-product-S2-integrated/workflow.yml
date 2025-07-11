@@ -1,0 +1,63 @@
+nodes:
+  - id: cdse_key
+    ref: inputs.cdse_key
+  - id: cdse_secret
+    ref: inputs.cdse_secret
+  - id: bands
+    ref: inputs.bands
+  - id: product_level_l1c  
+    ref: resources.product_level_l1c
+  - id: bbox
+    ref: resources.bbox
+  - id: max_cloud_cover
+    ref: resources.max_cloud_cover
+  - id: stac_query_most_recent
+    ref: dependencies.stac_query_most_recent
+  - id: get_product
+    ref: models.get_product
+  - id: output_l1c_raw
+    ref: outputs.l1c_raw
+edges:
+  - from:   ## Retrieve the STAC ITEM JSON
+      id: bbox
+    to:
+      id: stac_query_most_recent
+      port: bbox
+  - from: 
+      id: max_cloud_cover
+    to: 
+      id: stac_query_most_recent
+      port: max_cloud_cover
+      ## End of DEPENDENCIE -STAC_query
+  - from:
+      id: cdse_key
+    to:
+      id: get_product
+      port: cdse_key
+  - from:
+      id: cdse_secret
+    to:
+      id: get_product
+      port: cdse_secret
+  - from:
+      id: bands
+    to:
+      id: get_product
+      port: bands
+  - from:
+      id: product_level_l1c
+    to:
+      id: get_product
+      port: product_level  ## 4 out of 5 entries at the Model 
+  - from:   
+      id: stac_query_most_recent
+      port: stac_items
+    to:
+      id: get_product
+      port: stac_item
+  - from:
+      id: get_product
+      port: l1c_raw
+    to:
+      id: output_l1c_raw
+

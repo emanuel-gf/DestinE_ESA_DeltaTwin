@@ -7,9 +7,9 @@ nodes:
     ref: inputs.bands
   - id: get_product
     ref: models.get_product
-  - id: l1c_raw
+  - id: output_l1c_raw
     ref: outputs.l1c_raw
-  - id: l2a_raw
+  - id: output_l2a_raw
     ref: outputs.l2a_raw
 edges:
   - from:
@@ -27,3 +27,13 @@ edges:
     to:
       id: get_product
       port: bands
+  - from:
+      id: get_product
+      port: l1c_raw
+    to:
+      id: output_l1c_raw
+  - from:
+      id: get_product
+      port: l2a_raw
+    to:
+      id: output_l2a_raw
