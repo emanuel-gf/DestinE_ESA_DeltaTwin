@@ -47,8 +47,8 @@
                 {"name": "lxml", "version": "5.3.1"}
                 ],
                 "hardwareRequirements": {
-                    "cpu": "4000m",
-                    "ram": "3Gi"
+                    "cpu": "5000m",
+                    "ram": "8Gi"
                 },
                 "command": "python main.py $(inputs.s2_preprocessed)"
             },
@@ -60,7 +60,7 @@
             "outputs": {
                 "pred_tensor": {
                     "type": "Data",
-                    "glob": "pred.pt"
+                    "glob": "pred_tensor.npz"
                 }
             }
         }

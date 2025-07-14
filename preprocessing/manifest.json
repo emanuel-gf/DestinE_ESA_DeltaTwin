@@ -24,7 +24,7 @@
     "outputs": {
         "x_tensor": {
             "type": "Data",
-            "description": "A Pytorch Tensor Preprocessed for all bands."
+            "description": " Numpy ndarray variable which represents a Tensor -  Preprocessed for all bands."
         },
         "valid_mask": {
         "type":"Data",
@@ -46,8 +46,8 @@
                 {"name":"Pillow", "version": "10.1.0"}
                 ],
                 "hardwareRequirements": {
-                    "cpu": "2000m",
-                    "ram": "3Gi"
+                    "cpu": "3000m",
+                    "ram": "5Gi"
                 },
                 "command": "python main.py $(inputs.s2_raw)"
             },
@@ -59,7 +59,7 @@
             "outputs": {
                 "x_tensor": {
                     "type": "Data",
-                    "glob": "s2_preprocessed.pt"
+                    "glob": "s2_preprocessed.npz"
                 },
                 "valid_mask":{
                     "type": "Data",

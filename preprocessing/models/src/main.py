@@ -7,7 +7,7 @@ import numpy as np
 from dotenv import load_dotenv
 from loguru import logger
 
-from utils.utils import load_config,save_tensor_as_numpy
+from utils.utils import load_config
 
 def initialize_env(path_ndarray_raw_s2=sys.argv[1]) -> dict:
     """Load environment variables."""
@@ -77,7 +77,7 @@ def main() -> None:
     # Preprocess
     ## It is not returning a tensor, only a ndarray. The convertion to tensor is on Inferece Module. 
     ## This was done to eliminate pytorch from this docker.
-    x_np_tensor, valid_mask = preprocess(raw_data=s2_raw, resize=resize, device=device)
+    x_np_tensor, valid_mask = preprocess(raw_data=s2_raw, resize=resize)
 
     ## Save the x_np_tensor on numpy compressed format
     ## Saved the mask as a compressed numpy .npz

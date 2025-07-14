@@ -1,6 +1,6 @@
 {
     "s2_raw":{
       "type":"string",
-      "value": "L1C_['B02', 'B03', 'B04']_raw.npz"
+      "value": "L1C_b2b3b4_raw.npz"
     }
 }
