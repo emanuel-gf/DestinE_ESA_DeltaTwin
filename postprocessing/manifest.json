@@ -45,41 +45,15 @@
             "parameters": {
                 "pythonVersion": "3.12.2",
                 "pipRequirements": [
-                {
-                        "name": "Pillow",
-                        "version": "10.1.0"
-                    },
-                    {
-                        "name": "docstring-parser",
-                        "version": "0.16"
-                    },
-                    {
-                        "name": "dotenv",
-                        "version": "0.9.9"
-                    },
-                    {
-                        "name": "loguru",
-                        "version": "0.7.3"
-                    },
-                    {
-                        "name": "lxml",
-                        "version": "5.3.1"
-                    },
-                    {
-                        "name": "matplotlib",
-                        "version": "3.10.3"
-                    },
-                    {
-                        "name": "pandas",
-                        "version": "2.2.3"
-                    },
-                    {
-                        "name": "timm",
-                        "version": "1.0.15"
-                    }],
+                    {"name":"numpy", "version": "2.3.0"},
+                    {"name": "docstring-parser", "version": "0.16"},
+                    {"name": "dotenv", "version": "0.9.9"},
+                    {"name": "loguru","version": "0.7.3"},
+                    {"name": "timm",  "version": "1.0.15"}
+                ],
                 "hardwareRequirements": {
                     "cpu": "2000m",
-                    "ram": "4Gi"
+                    "ram": "3Gi"
                 },
                 "command": "python main.py $(inputs.pred_tensor) $(inputs.origin_tensor) $(inputs.valid_mask)"
             },

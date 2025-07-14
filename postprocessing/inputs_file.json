@@ -1,6 +1,15 @@
+
 {
-    "s2_raw":{
-      "type":"string",
-      "value": "L1C_['B02', 'B03', 'B04']_raw.npz"
-    }
+ "pred_tensor": {
+            "type": "string",
+            "value": "pred_tensor.npz"
+        },
+  "origin_tensor": {
+            "type": "string",
+            "value": "s2_preprocessed.npz"
+        },
+  "valid_mask": {
+            "type":"string",
+            "value": "valid_mask_preprocessed.npz"
+        }
 }
