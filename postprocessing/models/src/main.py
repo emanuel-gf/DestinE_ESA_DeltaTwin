@@ -6,7 +6,6 @@ import warnings
 from functools import wraps
 
 import numpy as np
-import torch
 from dotenv import load_dotenv
 from loguru import logger
 
@@ -29,10 +28,10 @@ def initialize_env(pred_tensor=sys.argv[1], origin_tensor=sys.argv[2], valid_mas
         return {}
 
 
-def postprocess(x_tensor: torch.Tensor, pred_tensor: np.ndarray, valid_mask: np.ndarray) -> tuple:
+def postprocess(x_data: np.ndarray, pred_tensor: np.ndarray, valid_mask: np.ndarray) -> tuple:
     """Postprocess the prediction."""
     try:
-        x_np = x_tensor.cpu().numpy()[0].transpose(1, 2, 0)
+        x_np = x_data #.cpu().numpy()[0].transpose(1, 2, 0)
         x_np[~valid_mask] = 0.0
         pred_np = pred_tensor
         pred_np[~valid_mask] = 0.0
@@ -48,38 +47,42 @@ def postprocess(x_tensor: torch.Tensor, pred_tensor: np.ndarray, valid_mask: np.
 
 def main() -> None:
     # Set up logging
-    logger.add("log_AiSen2Cor.log", rotation="10 MB")
+    logger.add("postprocessing.log", rotation="10 MB")
     logger.info("Start workflow ...")
     # Load environment and configs
 
-    env = initialize_env(key_id=sys.argv[1], secret_key=sys.argv[2])
+    env = initialize_env(pred_tensor=sys.argv[1], origin_tensor=sys.argv[2], valid_mask=sys.argv[3])
     dir_path = os.getcwd()
-
 
     # Load tensors
     ## Load origin tensor
     path_origin_tensor = env["origin_tensor"]
-    origin_tensor = torch.load(path_origin_tensor)
+    with np.load(path_origin_tensor) as a:
+        origin_tensor = a['array']
+    ## Transpose origin tensor to 1024,1024,3
+    origin_tensor = origin_tensor[0].transpose(1,2,0)
 
     ## Load pred tensor
     path_pred_tensor = env["pred_tensor"]
-    pred_tensor = torch.load(path_pred_tensor)
+    print(path_pred_tensor)
+    with np.load(path_pred_tensor) as a:
+        pred_tensor = a['arr_0']
 
     ## Load mask
     path_valid_mask = env["valid_mask"]
     with np.load(path_valid_mask) as a:
-        valid_mask = a["array"]
+        valid_mask = a['arr_0']
 
 
-    x_np, pred_np = postprocess(x_tensor=origin_tensor, pred_tensor=pred_tensor, valid_mask=valid_mask)
+    x_np, pred_np = postprocess(x_data=origin_tensor, pred_tensor=pred_tensor, valid_mask=valid_mask)
 
     ## Save the postprocess
     path_x_np_post = "./x_post_np.npz"
     path_pred_np_post = "./pred_post_np.npz"
-    np.save(path_x_np_post, x_np)
-    np.save(path_pred_np_post, pred_np)
+    np.savez_compressed(path_x_np_post, x_np)
+    np.savez_compressed(path_pred_np_post, pred_np)
 
-    logger.info(f"Stored at: {path_pred_np_post} & {path_pred_np_post}")
+    logger.info(f"Stored at: {path_pred_np_post} & {path_x_np_post}")
 
     logger.success("Workflow completed")
 

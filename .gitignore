@@ -1,5 +1,6 @@
 dependencies/
 teste/
+variables/
 # custum
 *.ipynb
 *.svg

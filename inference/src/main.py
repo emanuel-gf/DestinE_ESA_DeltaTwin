@@ -16,8 +16,7 @@ from PIL import Image
 
 from model_zoo.models import define_model
 from utils.torch import load_model_weights
-from utils.utils import load_config
-
+from utils.utils import load_config, load_numpy_as_tensor
 warnings.filterwarnings('ignore')
 
 
@@ -69,7 +68,7 @@ def main() -> None:
     logger.info("Start Inference workflow ...")
     # Load environment and configs
 
-    env = initialize_env(key_id=sys.argv[1])
+    env = initialize_env(s2_preprocessed=sys.argv[1])
     dir_path = os.getcwd()
 
     model_cfg = load_config(f"{dir_path}/cfg/config.yaml")
@@ -80,22 +79,19 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = load_model(model_cfg["MODEL"], model_path, device)
 
-    # Load the preprocessed tensor
+    # Load the preprocessed x data as a tensor
     path_tensor = env["s2_preprocessed"]
-    x_tensor = torch.load(path_tensor)
+    x_tensor = load_numpy_as_tensor(path_tensor, device=device)
     
     logger.info("Predicting")
-    pred_tensor = predict(model=model, x_tensor=x_tensor)
-
-
-    logger.info("Plot tile generation benchmark")
+    pred_tensor = predict(model=model, x_tensor=x_tensor) 
 
     ## Save the prediction 
-    saved_path_torch = "./pred_tensor.pt"
-    torch.save(pred_tensor,
-               saved_path_torch)
+    saved_path_tensor = "./pred_tensor.npz"
     
-    logger.debug(f"Tensor saved at {saved_path_torch}")
+    np.savez_compressed(saved_path_tensor, pred_tensor)
+    
+    logger.debug(f"Tensor saved at {saved_path_tensor}")
     logger.success("Workflow completed")
 
 

@@ -38,18 +38,16 @@
                 "pythonVersion": "3.12.2",
                 "pipRequirements": [
                 { "name": "numpy", "version": "1.26.4" },
-                { "name": "pandas", "version": "2.2.3" },
                 { "name": "dotenv", "version": "0.9.9" },
                 { "name": "loguru", "version": "0.7.3" },
-                {"name": "torch", "version": "2.6.0" },
                 {"name": "timm", "version": "1.0.15" },
                 {"name": "opencv-python-headless", "version": "4.10.0.84"},
                 {"name": "lxml", "version": "5.3.1"},
                 {"name":"Pillow", "version": "10.1.0"}
                 ],
                 "hardwareRequirements": {
-                    "cpu": "4000m",
-                    "ram": "5Gi"
+                    "cpu": "2000m",
+                    "ram": "3Gi"
                 },
                 "command": "python main.py $(inputs.s2_raw)"
             },

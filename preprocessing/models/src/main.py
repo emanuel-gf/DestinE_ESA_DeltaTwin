@@ -4,13 +4,10 @@ from functools import wraps
 
 import cv2
 import numpy as np
-import torch
 from dotenv import load_dotenv
 from loguru import logger
 
-from utils.utils import load_config
-
-
+from utils.utils import load_config,save_tensor_as_numpy
 
 def initialize_env(path_ndarray_raw_s2=sys.argv[1]) -> dict:
     """Load environment variables."""
@@ -45,15 +42,15 @@ def normalize(data_array: np.ndarray) -> tuple:
         return None, None
 
 
-def preprocess(raw_data: np.ndarray, resize: int, device: torch.device):
+def preprocess(raw_data: np.ndarray, resize: int):
     """Preprocess the raw data."""
     try:
         x_data, valid_mask = normalize(raw_data)
         x_data = cv2.resize(x_data, (resize, resize), interpolation=cv2.INTER_AREA)
         valid_mask = cv2.resize(valid_mask.astype(np.uint8), (resize, resize), interpolation=cv2.INTER_NEAREST).astype(bool)
-        x_tensor = torch.from_numpy(x_data).float().permute(2, 0, 1).unsqueeze(0).to(device) # [B , C , W, H]
+       #x_tensor = torch.from_numpy(x_data).float().permute(2, 0, 1).unsqueeze(0).to(device) # [B , C , W, H]
         logger.success("Preprocess raw data successull")
-        return x_tensor, valid_mask
+        return x_data, valid_mask
     except Exception as e:
         logger.error(f"Failed to preprocess raw data: {e}")
         return None, None
@@ -77,22 +74,21 @@ def main() -> None:
     with np.load(s2_raw_path) as data:
         s2_raw = data['array']
 
-    # Try Cuda
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
- 
     # Preprocess
-    x_tensor, valid_mask = preprocess(raw_data=s2_raw, resize=resize, device=device)
+    ## It is not returning a tensor, only a ndarray. The convertion to tensor is on Inferece Module. 
+    ## This was done to eliminate pytorch from this docker.
+    x_np_tensor, valid_mask = preprocess(raw_data=s2_raw, resize=resize, device=device)
 
-    ## Save the tensor on a torch format
+    ## Save the x_np_tensor on numpy compressed format
     ## Saved the mask as a compressed numpy .npz
-    saved_path_torch = "./s2_preprocessed.pt"
+    saved_path_tensor = "./s2_preprocessed.npz"
     saved_path_ndarray = "./valid_mask_preprocessed.npz"
-    torch.save(x_tensor,
-               saved_path_torch)
+
+    np.savez_compressed(saved_path_tensor, x_np_tensor)
+
     np.savez_compressed(saved_path_ndarray,
                         valid_mask)
-    logger.debug(f"Tensor saved as {saved_path_torch}")
-    logger.debug(f"Valid Mask saved as {saved_path_ndarray}")
+    
     logger.success("Workflow completed")
 
 
