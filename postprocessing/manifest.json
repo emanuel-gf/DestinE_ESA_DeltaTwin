@@ -1,0 +1,121 @@
+{
+    "name": "preprocessing-s2-ai-atmospheric-correction",
+    "description": "Prototype version of the preprocessing step for applying AI on atmospheric correction.",
+    "license": {
+        "name": "LGPLv3",
+        "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
+        "description": "",
+        "copyrights": [
+            {
+                "years": [
+                    2025
+                ],
+                "company": "European Space Agency"
+            }
+        ]
+    },
+    "owner": "sebastien.tetauld, emanuel.goulart",
+    "inputs": {
+        "pred_tensor": {
+            "type": "string",
+            "description": "Predicted tensor"
+        },
+        "origin_tensor": {
+            "type": "string",
+            "description": "Origin Tensor"
+        },
+        "valid_mask": {
+            "type":"string",
+            "description": "Valid Mask with values stored as a compressed numpy (.npz)"
+        }
+    },
+    "outputs": {
+        "pred_postprocessed": {
+            "type": "Data",
+            "description": "A Numpy ndarray with postprocess for all bands. Refering to the Predicted Tensor"
+        },
+        "origin_postprocessed": {
+        "type":"Data",
+        "description":"A Numpy ndarray with postprocess for all bands. Refering to the Origin Tensor"}
+    },
+    "models": {
+        "postprocessing": {
+            "path": "models/src",
+            "type": "python",
+            "parameters": {
+                "pythonVersion": "3.12.2",
+                "pipRequirements": [
+                {
+                        "name": "Pillow",
+                        "version": "10.1.0"
+                    },
+                    {
+                        "name": "docstring-parser",
+                        "version": "0.16"
+                    },
+                    {
+                        "name": "dotenv",
+                        "version": "0.9.9"
+                    },
+                    {
+                        "name": "loguru",
+                        "version": "0.7.3"
+                    },
+                    {
+                        "name": "lxml",
+                        "version": "5.3.1"
+                    },
+                    {
+                        "name": "opencv-python-headless",
+                        "version": "4.11.0.86"
+                    },
+                    {
+                        "name": "torch",
+                        "version": "2.7"
+                    },
+                    {
+                        "name": "matplotlib",
+                        "version": "3.10.3"
+                    },
+                    {
+                        "name": "pandas",
+                        "version": "2.2.3"
+                    },
+                    {
+                        "name": "segmentation-models-pytorch",
+                        "version": "0.4.0"
+                    },
+                    {
+                        "name": "timm",
+                        "version": "1.0.15"
+                    }],
+                "hardwareRequirements": {
+                    "cpu": "2000m",
+                    "ram": "3Gi"
+                },
+                "command": "python main.py $(inputs.pred_tensor) $(inputs.origin_tensor) $(inputs.valid_mask)"
+            },
+            "inputs": {
+                "pred_tensor": {
+                    "type": "string"
+                },
+                "origin_tensor":{
+                    "type":"string"
+                },
+                "valid_mask":{
+                    "type":"string"
+                }
+            },
+            "outputs": {
+                "pred_postprocessed": {
+                    "type": "Data",
+                    "glob": "pred_post_np.npz"
+                },
+                "origin_postprocessed":{
+                    "type": "Data",
+                    "glob": "x_post_np.npz"
+                }
+            }
+        }
+    }
+}

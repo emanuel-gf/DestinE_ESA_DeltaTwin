@@ -1,0 +1,68 @@
+{
+    "name": "inference-s2-ai-atmospheric-correction",
+    "description": "Prototype version of the preprocessing step for applying AI on atmospheric correction.",
+    "license": {
+        "name": "LGPLv3",
+        "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
+        "description": "",
+        "copyrights": [
+            {
+                "years": [
+                    2025
+                ],
+                "company": "European Space Agency"
+            }
+        ]
+    },
+    "owner": "sebastien.tetauld, emanuel.goulart",
+    "inputs": {
+        "s2_preprocessed": {
+            "type": "string",
+            "description": "Path for a Torch Tensor object containing the bands and the image. "
+        }
+    },
+    "outputs": {
+        "pred_tensor": {
+            "type": "Data",
+            "description": "Inference prediction of the model. A Torch Tensor object containing the bands. "
+        }
+    },
+    "models": {
+        "inference": {
+            "path": "models/src",
+            "type": "python",
+            "parameters": {
+                "pythonVersion": "3.12.2",
+                "pipRequirements": [
+                { "name": "numpy", "version": "1.26.4" },
+                { "name": "pandas", "version": "2.2.3" },
+                { "name": "pystac-client", "version": "0.8.6" },
+                { "name": "dotenv", "version": "0.9.9" },
+                { "name": "loguru", "version": "0.7.3" },
+                { "name": "PyYAML", "version": "6.0.1" },
+                {"name": "torch", "version": "2.7" },
+                {"name": "segmentation-models-pytorch","version": "0.4.0"},
+                {"name": "timm", "version": "1.0.15" },
+                {"name": "opencv-python-headless", "version": "4.11.0.86"},
+                {"name": "lxml", "version": "5.3.1"}
+                ],
+                "hardwareRequirements": {
+                    "cpu": "4000m",
+                    "ram": "3Gi"
+                },
+                "command": "python main.py $(inputs.s2_preprocessed)"
+            },
+            "inputs": {
+                "s2_preprocessed": {
+                    "type": "string"
+                }
+            },
+            "outputs": {
+                "pred_tensor": {
+                    "type": "Data",
+                    "glob": "pred.pt"
+                }
+            }
+        }
+    }
+}

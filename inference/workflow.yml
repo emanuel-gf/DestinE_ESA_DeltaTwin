@@ -1,0 +1,19 @@
+nodes:
+  - id: s2_preprocessed
+    ref: inputs.s2_preprocessed
+  - id: inference
+    ref: models.inference
+  - id: output_pred_tensor
+    ref: outputs.pred_tensor
+    
+edges:
+  - from:
+      id: s2_preprocessed
+    to:
+      id: inference
+      port: s2_preprocessed
+  - from:
+      id: inference
+      port: pred_tensor
+    to: 
+      id: output_pred_tensor

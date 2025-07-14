@@ -1,0 +1,40 @@
+nodes:
+  - id: pred_tensor
+    ref: inputs.pred_tensor
+  - id: origin_tensor
+    ref: inputs.origin_tensor
+  - id: valid_mask
+    ref: inputs.valid_mask
+  - id: postprocessing
+    ref: models.postprocessing
+  - id: output_x_postprocessed
+    ref: outputs.origin_postprocessed
+  - id:  output_pred_postprocessed
+    ref: outputs.pred_postprocessed
+    
+edges:
+  - from:
+      id: pred_tensor
+    to:
+      id: postprocessing
+      port: pred_tensor
+  - from:
+      id: origin_tensor
+    to:
+      id: postprocessing
+      port: origin_tensor
+  - from: 
+      id: valid_mask
+    to: 
+      id: postprocessing
+      port: valid_mask  ## End of Input
+  - from:  ##Begin of Output
+      id: postprocessing
+      port: origin_postprocessed
+    to: 
+      id: output_x_postprocessed
+  - from:
+      id: postprocessing
+      port: pred_postprocessed
+    to: 
+      id: output_pred_postprocessed

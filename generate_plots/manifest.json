@@ -1,0 +1,112 @@
+{
+    "name": "postprocessing-s2-ai-atmo-correc",
+    "description": "Prototype version of querying STAC catalog for most recent Sentinel-2 L1C and L2A items.",
+    "license": {
+        "name": "LGPLv3",
+        "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
+        "description": "",
+        "copyrights": [
+            {
+                "years": [
+                    2025
+                ],
+                "company": "European Space Agency"
+            }
+        ]
+    },
+    "owner": "sebastien.tetauld , emanuel.goulart",
+    "inputs": {
+        "pred_np": {
+            "type": "string",
+            "description": "Prediction from Inference of AI model."
+        },
+        "x_np": {
+            "type": "string",
+            "description": "X ndarray."
+        },
+        "gt_np":{
+            "type":"string",
+            "description":"Ground truth."
+        },
+        "bands":{
+            "type":"string",
+            "description":"Sentinel-2 Bands (e.g: B02,B03,B04)"
+        }
+    },
+    "outputs": {
+        "L2A_B02": {
+            "type": "Data",
+            "description": "L2A B02"
+        },
+        "L2A_B03": {
+            "type": "Data",
+            "description": "L2A B03"
+        },
+        "L2A_B04": {
+            "type": "Data",
+            "description": "L2A B04"
+        },
+        "L2A_TCI": {
+            "type": "Data",
+            "description": "L2A TCI"
+        },
+        "metrics": {
+            "type": "Data",
+            "description": "Metrics"
+        }
+    },
+    "models": {
+        "generate_plot": {
+            "path": "models",
+            "type": "python",
+            "parameters": {
+                "pythonVersion": "3.12.2",
+                "pipRequirements": [
+                { "name": "numpy", "version": "1.26.4" },
+                { "name": "pandas", "version": "2.2.3" },
+                { "name": "dotenv", "version": "0.9.9" },
+                { "name": "loguru", "version": "0.7.3" },
+                { "name": "PyYAML", "version": "6.0.1" },
+                {"name": "matplotlib", "version": "3.9.2"}
+                ],
+                "hardwareRequirements": {
+                    "cpu": "4000m",
+                    "ram": "4Gi"
+                },
+                "command": "python main.py $(inputs.pred_np) $(inputs.x_np) $(inputs.gt_np) $(inputs.bands)"
+            },
+            "inputs": {
+                "pred_np": {
+                    "type": "string"},
+                "x_np": {
+                    "type": "string"},
+                "gt_np":{
+                    "type":"string"},
+                "bands":{
+                    "type":"string"}
+            },
+            "outputs": {
+                "L2A_B02": {
+                    "type": "Data",
+                    "glob": "B02.svg"
+                },
+                "L2A_B03": {
+                    "type": "Data",
+                    "glob": "B03.svg"
+                },
+                "L2A_B04": {
+                    "type": "Data",
+                    "glob": "B04.svg"
+                },
+                "L2A_TCI": {
+                    "type": "Data",
+                    "glob": "TCI.svg"
+                },
+                "metrics": {
+                    "type": "Data",
+                    "glob": "metrics.json"
+                }
+            }
+        }
+    }
+}

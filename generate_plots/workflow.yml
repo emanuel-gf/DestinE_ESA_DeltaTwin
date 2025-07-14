@@ -1,0 +1,69 @@
+nodes:
+  - id: pred_np
+    ref: inputs.pred_np
+  - id: x_np
+    ref: inputs.x_np
+  - id: gt_np
+    ref: inputs.gt_np
+  - id: bands  
+    ref: inputs.bands
+  - id: generate_plot
+    ref: models.generate_plot
+  - id: output_b02
+    ref : outputs.L2A_B02
+  - id: output_b03
+    ref : outputs.L2A_B03
+  - id: output_b04
+    ref : outputs.L2A_B04
+  - id: output_tci
+    ref : outputs.L2A_TCI
+  - id: output_metrics
+    ref: outputs.metrics
+
+edges:
+  - from:   
+      id: pred_np
+    to:
+      id: generate_plot
+      port: pred_np
+  - from: 
+      id: x_np
+    to: 
+      id: generate_plot
+      port: x_np
+  - from:
+      id: gt_np
+    to:
+      id: generate_plot
+      port: gt_np
+  - from:
+      id: bands
+    to:
+      id: generate_plot
+      port: bands ## end of input
+  - from:
+      id: generate_plot
+      port: L2A_B02
+    to:
+      id: output_b02
+  - from:
+      id: generate_plot
+      port: L2A_B03
+    to:
+      id: output_b03
+  - from:   
+      id: generate_plot
+      port: L2A_B04
+    to:
+      id: output_b04
+  - from:
+      id: generate_plot
+      port: L2A_TCI
+    to:
+      id: output_tci
+  - from: 
+      id: generate_plot 
+      port: metrics
+    to:
+      id: output_metrics
+

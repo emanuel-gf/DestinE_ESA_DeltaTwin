@@ -1,0 +1,26 @@
+nodes:
+  - id: s2_raw
+    ref: inputs.s2_raw
+  - id: preprocessing
+    ref: models.preprocessing
+  - id: output_x_tensor
+    ref: outputs.x_tensor
+  - id:  output_valid_mask
+    ref: outputs.valid_mask
+    
+edges:
+  - from:
+      id: s2_raw
+    to:
+      id: preprocessing
+      port: s2_raw
+  - from:
+      id: preprocessing
+      port: x_tensor
+    to: 
+      id: output_x_tensor
+  - from:
+      id: preprocessing
+      port: valid_mask
+    to: 
+      id: output_valid_mask
