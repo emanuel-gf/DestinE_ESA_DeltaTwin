@@ -26,14 +26,14 @@ def parse_arguments() -> argparse.Namespace:
     )
     
     # Add positional arguments - correct syntax
-    parser.add_argument('prep_np', type=str, help="Predicted Image. Numpy ndarray")
+    parser.add_argument('pred_np', type=str, help="Predicted Image. Numpy ndarray")
     parser.add_argument('x_np', type=str, help="Image used to predict - Sourced image. Numpy ndarray")
     parser.add_argument('gt_np', type=str, help="Ground Truth ndarray")
     parser.add_argument('bands', type=str, help="List of bands to be extracted. Should match the exact name of the catalogue. (e.g: 'B02,B03,B04'). Numpy ndarray")
     return parser.parse_args()
 
 
-def parse_bands(bands_string: str) -> list[str]:
+def parse_bands(bands: str) -> list[str]:
     """
     Parse a comma-separated string of bands into a list of strings.
     
@@ -49,16 +49,16 @@ def parse_bands(bands_string: str) -> list[str]:
         >>> parse_bands("B02, B03 , B04")
         ['B02', 'B03', 'B04']
     """
-    return [band.strip() for band in bands_string.split(',')]
+    return [band.strip() for band in bands.split(',')]
 
 
-def initialize_env(prep_np:str, x_np: str, gt_np: str, bands=str) -> dict:
+def initialize_env(pred_np:str, x_np: str, gt_np: str, bands=str) -> dict:
     """Load environment variables."""
     try:
         load_dotenv()
         logger.success("Loaded environment variables")
         return {
-            "prep_np": str(prep_np),
+            "pred_np": str(pred_np),
             "x_np": str(x_np),
             "gt_np":str(gt_np),
             "bands":parse_bands(bands)
@@ -82,7 +82,7 @@ def main() -> None:
         pred_np=args.pred_np,
         x_np=args.x_np, 
         gt_np= args.gt_np,
-        bands_str = args.bands
+        bands = args.bands
     )
 
     dir_path = os.getcwd()
@@ -94,13 +94,22 @@ def main() -> None:
     path_pred_np = env["pred_np"]
 
     with np.load(path_gt_np) as a:
-        gt_np = a["array"]
+        try:
+            gt_np = a["array"]
+        except:
+            gt_np = a["arr_0"]
     
     with np.load(path_x_np) as a:
-        x_np = a["array"]
+        try:
+            x_np = a["array"]
+        except:
+            x_np = a["arr_0"]
     
     with np.load(path_pred_np) as a:
-        pred_np = a["array"]
+        try:
+            pred_np = a["array"]
+        except:
+            pred_np = a["arr_0"]
 
 
     ## Load data

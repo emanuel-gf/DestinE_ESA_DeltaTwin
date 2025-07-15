@@ -58,20 +58,32 @@ def main() -> None:
     ## Load origin tensor
     path_origin_tensor = env["origin_tensor"]
     with np.load(path_origin_tensor) as a:
-        origin_tensor = a['array']
-    ## Transpose origin tensor to 1024,1024,3
-    origin_tensor = origin_tensor[0].transpose(1,2,0)
+        try:
+            origin_tensor = a['arr_0']
+        except:
+            origin_tensor = a["array"]
+
+    ## Check shape and transpose in case
+    if len(origin_tensor)>3 & origin_tensor.shape[-1]!=3:
+        ## Transpose origin tensor to 1024,1024,3
+        origin_tensor = origin_tensor[0].transpose(1,2,0)
 
     ## Load pred tensor
     path_pred_tensor = env["pred_tensor"]
     print(path_pred_tensor)
     with np.load(path_pred_tensor) as a:
-        pred_tensor = a['arr_0']
+        try:
+            pred_tensor = a['arr_0']
+        except:
+            pred_tensor = a["array"]
 
     ## Load mask
     path_valid_mask = env["valid_mask"]
     with np.load(path_valid_mask) as a:
-        valid_mask = a['arr_0']
+        try:
+            valid_mask = a['arr_0']
+        except: 
+            valid_mask = a["array"]
 
 
     x_np, pred_np = postprocess(x_data=origin_tensor, pred_tensor=pred_tensor, valid_mask=valid_mask)

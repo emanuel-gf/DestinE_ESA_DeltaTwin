@@ -48,9 +48,13 @@ def load_numpy_as_tensor(file_path: str, device: torch.device = None,
     file_path = Path(file_path)
     
     if file_path.suffix == '.npz':
+        try:
         # Load from compressed .npz
-        with np.load(file_path) as data:
-            numpy_array = data['array']
+            with np.load(file_path) as data:
+                numpy_array = data['array']
+        except:
+            with np.load(file_path) as data:
+                numpy_array = data['arr_0']
     elif file_path.suffix == '.npy':
         # Load from regular .npy
         numpy_array = np.load(file_path)

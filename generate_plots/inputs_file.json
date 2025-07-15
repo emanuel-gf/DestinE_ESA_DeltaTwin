@@ -1,0 +1,18 @@
+{
+    "pred_np":{
+        "type":"string",
+        "value":"pred_post_np.npz"
+    },
+    "x_np":{
+        "type": "string",
+        "value": "x_post_np.npz"
+    },
+    "gt_np":{
+        "type":"string",
+        "value": "LA2_x_post_np.npz"
+    },
+    "bands": {
+        "type": "string",
+        "value": "B02,B03,B04"
+    }
+}
