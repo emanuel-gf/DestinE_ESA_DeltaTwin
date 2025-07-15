@@ -1,6 +1,6 @@
 {
     "s2_preprocessed":{
       "type":"string",
-      "value": "s2_preprocessed.pt"
+      "value": "s2_preprocessed.npz"
     }
 }

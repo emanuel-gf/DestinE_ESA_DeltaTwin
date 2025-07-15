@@ -1,6 +1,6 @@
 {
-    "name": "preprocessing-s2-ai-atmospheric-correction",
-    "description": "Prototype version of the preprocessing step for applying AI on atmospheric correction.",
+    "name": "postprocessing-s2-ai-atmospheric-correction",
+    "description": "Prototype version of the postprocessing step for applying AI on atmospheric correction.",
     "license": {
         "name": "LGPLv3",
         "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
@@ -18,11 +18,11 @@
     "inputs": {
         "pred_tensor": {
             "type": "string",
-            "description": "Predicted tensor"
+            "description": "Predicted tensor. Stored as a numpy compressed object (.npz)"
         },
         "origin_tensor": {
             "type": "string",
-            "description": "Origin Tensor"
+            "description": "Origin Tensor. Stored as a numpy compressed object (.npz)"
         },
         "valid_mask": {
             "type":"string",

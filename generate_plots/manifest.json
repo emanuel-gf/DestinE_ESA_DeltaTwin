@@ -1,6 +1,6 @@
 {
     "name": "generate-plot-s2-ai-atmo-correc",
-    "description": "Plot generation for True Color Image and respective Bands. Including a metrics evaluation.",
+    "description": "Plot generating True Color Image and respective Bands. Including a metrics evaluation.",
     "license": {
         "name": "LGPLv3",
         "url": "https://www.gnu.org/licenses/gpl-3.0.txt",

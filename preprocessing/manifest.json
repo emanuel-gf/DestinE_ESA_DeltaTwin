@@ -47,7 +47,7 @@
                 ],
                 "hardwareRequirements": {
                     "cpu": "3000m",
-                    "ram": "5Gi"
+                    "ram": "4Gi"
                 },
                 "command": "python main.py $(inputs.s2_raw)"
             },

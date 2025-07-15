@@ -1,0 +1,132 @@
+{
+    "name": "end-to-end-s2-processor-ai-atmo-correction",
+    "description": "End to end s2 processor with AI to atmospheric correction of Sentinel L1C to L2A.",
+    "license": {
+        "name": "LGPLv3",
+        "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
+        "description": "",
+        "copyrights": [
+            {
+                "years": [
+                    2025
+                ],
+                "company": "European Space Agency"
+            }
+        ]
+    },
+    "owner": "sebastien.tetauld, emanuel.goulart",
+    "inputs": {
+        "cdse_key": {
+            "type": "string",
+            "description": "CDSE ACCESS_KEY_ID"
+        },
+        "cdse_secret": {
+            "type": "string",
+            "description": "CDSE SECRET ACCESS KEY"
+        },
+        "bands":{
+            "type":"string",
+            "description":"Sentinel-2 Bands (e.g: B02,B03,B04)"
+        },
+        "bbox":{
+            "type":"string",
+            "description:": "A bbox for querying S2 images. lon_min, lat_min, lon_max, lat_max. (e.g:3.2833,45.3833,11.2,50.1833)  "
+        },
+        "max_cloud_cover":{
+            "type":"string",
+            "description": "A numerical value representing the maximum cloud cover for the queried scene. e.g 20"
+        }
+    },
+    "outputs": {
+            "L2A_B02": {
+                "type": "Data",
+                "description": "L2A B02"
+            },
+            "L2A_B03": {
+                "type": "Data",
+                "description": "L2A B03"
+            },
+            "L2A_B04": {
+                "type": "Data",
+                "description": "L2A B04"
+            },
+            "L2A_TCI": {
+                "type": "Data",
+                "description": "L2A TCI"
+            },
+            "metrics": {
+                "type": "Data",
+                "description": "Metrics"
+            }
+    },
+    "resources":{
+        "product_level_l1c":{
+            "type":"string",
+            "value":"L1C"
+        },
+        "product_level_l2a":{
+            "type":"string",
+            "value":"L2A"
+        }
+    },
+    "models": {
+        "inference": {
+            "path": "models",
+            "type": "python",
+            "parameters": {
+                "pythonVersion": "3.12.2",
+                "pipRequirements": [
+                { "name": "numpy", "version": "1.26.4" },
+                { "name": "pandas", "version": "2.2.3" },
+                { "name": "pystac-client", "version": "0.8.6" },
+                {"name":"pystac", "version":"1.13.0"},
+                { "name": "dotenv", "version": "0.9.9" },
+                { "name": "loguru", "version": "0.7.3" },
+                { "name": "PyYAML", "version": "6.0.1" },
+                {"name": "Pillow", "version": "10.1.0"},
+                {"name": "boto3","version": "1.34.20"},
+                {"name": "lxml",  "version": "5.3.1"}
+
+                ],
+                "hardwareRequirements": {
+                    "cpu": "4000m",
+                    "ram": "9Gi"
+                },
+                "command": "python main.py $(inputs.cdse_key) $(inputs.cdse_secret) $(inputs.bands) $(inputs.product_level) $(inputs.stac_item)"
+            },
+            "inputs": {
+                "s2_preprocessed": {
+                    "type": "string"
+                }
+            },
+            "outputs": {
+                "pred_tensor": {
+                    "type": "Data",
+                    "glob": "pred_tensor.npz"
+                }
+            }
+        }
+    },
+    "dependencies":{
+        "stac_query_most_recent":{
+            "id":"stac_query_most_recent",
+            "version":"0.4"
+        },
+        "get_sen2_products":{
+            "id": "get_sen2_products_from_s3_single",
+            "version": "0.1"
+        },
+        "preprocessing":{
+            "id": "preprocessing_s2_ai_atmospheric_correction",
+            "version": "0.1"
+        },
+        "postprocessing":{
+            "id":"postprocessing_s2_ai_atmospheric_correction",
+            "version": "0.1"
+        },
+        "generate_plot":{
+            "id": "generate-plot-s2-ai-atmo-correc",
+            "version":"0.1"
+        }
+    }
+}

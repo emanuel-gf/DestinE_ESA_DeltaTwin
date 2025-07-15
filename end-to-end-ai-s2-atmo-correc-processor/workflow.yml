@@ -1,0 +1,217 @@
+nodes:
+  - id: cdse_key
+    ref: inputs.cdse_key
+  - id: cdse_secret
+    ref: inputs.cdse_secret
+  - id: bands
+    ref: inputs.bands
+  - id: bbox
+    ref: inputs.bbox
+  - id: max_cloud_cover
+    ref: inputs.max_cloud_cover ## end to inputs 
+  - id: product_level_l1c  
+    ref: resources.product_level_l1c
+  - id: product_level_l2a 
+    ref: resources.product_level_l2a ## end of resources  
+  - id: stac_query_most_recent
+    ref: dependencies.stac_query_most_recent
+  - id: get_sen2_products_l1c
+    ref: dependencies.get_sen2_products
+  - id: get_sen2_products_l2a
+    ref: dependencies.get_sen2_products 
+  - id: preprocessing_l1c
+    ref: dependencies.preprocessing
+  - id: preprocessing_l2a
+    ref: dependencies.preprocessing
+  - id: postprocessing_l1c
+    ref: dependencies.postprocessing
+  - id: postprocessing_l2a
+    ref: dependencies.postprocessing
+  - id: generate_plot
+    ref: dependencies.generate_plot ##end of dependencies
+  - id: inference
+    ref: models.get_product ## model
+  - id: output_b02
+    ref : outputs.L2A_B02
+  - id: output_b03
+    ref : outputs.L2A_B03
+  - id: output_b04
+    ref : outputs.L2A_B04
+  - id: output_tci
+    ref : outputs.L2A_TCI
+  - id: output_metrics
+    ref: outputs.metrics
+edges:
+  - from:   ## Retrieve the STAC ITEM JSON
+      id: bbox
+    to:
+      id: stac_query_most_recent
+      port: bbox
+  - from: 
+      id: max_cloud_cover
+    to: 
+      id: stac_query_most_recent
+      port: max_cloud_cover
+      ## End of DEPENDENCIE -STAC_query
+  - from: ## Start DEPENDENCY - S2_PRODUCT_L1C
+      id: cdse_key
+    to:
+      id: get_sen2_products_l1c
+      port: cdse_key
+  - from:
+      id: cdse_secret
+    to:
+      id: get_sen2_products_l1c
+      port: cdse_secret
+  - from:
+      id: bands
+    to:
+      id: get_sen2_products_l1c
+      port: bands
+  - from:
+      id: product_level_l1c
+    to:
+      id: get_sen2_products_l1c
+      port: product_level  ## 4 out of 5 entries at the Model 
+  - from:   
+      id: stac_query_most_recent ## Run Dependency STAC and output to next dependency 
+      port: stac_items
+    to:
+      id: get_sen2_products_l1c
+      port: stac_item ## End INPUT DEPENDENCIES 
+  - from: ## GET S2 PRODUCT_L2A
+      id: cdse_key
+    to:
+      id: get_sen2_products_l2a
+      port: cdse_key
+  - from:
+      id: cdse_secret
+    to:
+      id: get_sen2_products_l2a
+      port: cdse_secret
+  - from:
+      id: bands
+    to:
+      id: get_sen2_products_l2a
+      port: bands
+  - from:
+      id: product_level_l2a
+    to:
+      id: get_sen2_products_l2a
+      port: product_level  
+  - from:   
+      id: stac_query_most_recent ## Run Dependency STAC and output to next dependency 
+      port: stac_items
+    to:
+      id: get_sen2_products_l1c
+      port: stac_item ## End INPUT DEPENDENCIES 
+    ## PREPROCESSING L1C - INPUT 
+  - from:
+      id: get_sen2_products_l1c
+      port: S2_raw
+    to: 
+      id: preprocessing_l1c
+      port: s2_raw
+    ## PREPROCESSING L2A - INPUT
+  - from:
+      id: get_sen2_products_l2a
+      port: S2_raw
+    to:
+      id: preprocessing_l2a
+      port: s2_raw
+    ## INPUT INFERENCE
+  - from:
+      id: preprocessing_l1c
+      port: x_tensor
+    to:
+      id: inference
+      port: s2_preprocessed
+    ## POSTPROCESS - INPUT - L2A
+  - from: 
+      id: preprocessing_l2a
+      port: valid_mask
+    to:
+      id: postprocessing_l2a
+      port: valid_mask
+  - from:
+      id: preprocessing_l2a
+      port: x_tensor
+    to:
+      id: postprocessing_l2a
+      port: origin_tensor
+  - from: 
+      id: inference
+      port: pred_tensor
+    to: 
+      id: postprocessing_l2a
+      port: pred_tensor
+    ## POSTPROCESS - INPUT - L1c
+  - from: 
+      id: preprocessing_l1c
+      port: valid_mask
+    to:
+      id: postprocessing_l1c
+      port: valid_mask
+  - from:
+      id: preprocessing_l1c
+      port: x_tensor
+    to:
+      id: postprocessing_l1c
+      port: origin_tensor
+  - from: 
+      id: inference
+      port: pred_tensor
+    to: 
+      id: postprocessing_l1c
+      port: pred_tensor
+  ## GENERATE PLOT - INPUT
+  - from: 
+      id: postprocessing_l1c
+      port: pred_postprocessed
+    to:
+      id: generate_plot
+      port: pred_np
+  - from:
+      id: postprocessing_l1c
+      port: origin_postprocessed
+    to: 
+      id: generate_plot
+      port: x_np
+  - from:
+      id: postprocessing_l2a
+      port: origin_postprocessed
+    to: 
+      id: generate_plot
+      port: gt_np
+  - from: 
+      id: bands
+    to:
+      id: generate_plot
+      port: bands
+  ## OUTPUT EVERYTHING
+  - from:
+      id: generate_plot
+      port: L2A_B02
+    to:
+      id: output_b02
+  - from:
+      id: generate_plot
+      port: L2A_B03
+    to:
+      id: output_b03
+  - from:   
+      id: generate_plot
+      port: L2A_B04
+    to:
+      id: output_b04
+  - from:
+      id: generate_plot
+      port: L2A_TCI
+    to:
+      id: output_tci
+  - from: 
+      id: generate_plot 
+      port: metrics
+    to:
+      id: output_metrics
+

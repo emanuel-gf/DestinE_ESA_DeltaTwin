@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAML to Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 900px;
+        }
+        #yamlInput {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #mynetwork {
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            border: 1px solid lightgray;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>YAML to Diagram</h1>
+        <textarea id="yamlInput" rows="20" cols="60">
+nodes:
+  - id: cdse_key
+    ref: inputs.cdse_key
+  - id: cdse_secret
+    ref: inputs.cdse_secret
+  - id: bands
+    ref: inputs.bands
+  - id: product_level_l1c
+    ref: resources.product_level_l1c
+  - id: bbox
+    ref: resources.bbox
+  - id: max_cloud_cover
+    ref: resources.max_cloud_cover
+  - id: stac_query_most_recent
+    ref: dependencies.stac_query_most_recent
+  - id: get_product
+    ref: models.get_product
+  - id: output_l1c_raw
+    ref: outputs.l1c_raw
+edges:
+  - from:
+      id: bbox
+    to:
+      id: stac_query_most_recent
+      port: bbox
+  - from:
+      id: max_cloud_cover
+    to:
+      id: stac_query_most_recent
+      port: max_cloud_cover
+  - from:
+      id: cdse_key
+    to:
+      id: get_product
+      port: cdse_key
+  - from:
+      id: cdse_secret
+    to:
+      id: get_product
+      port: cdse_secret
+  - from:
+      id: bands
+    to:
+      id: get_product
+      port: bands
+  - from:
+      id: product_level_l1c
+    to:
+      id: get_product
+      port: product_level
+  - from:
+      id: stac_query_most_recent
+      port: stac_items
+    to:
+      id: get_product
+      port: stac_item
+  - from:
+      id: get_product
+      port: l1c_raw
+    to:
+      id: output_l1c_raw
+        </textarea>
+        <br>
+        <button onclick="drawDiagram()">Draw Diagram</button>
+        <div id="mynetwork"></div>
+    </div>
+
+    <script>
+        function drawDiagram() {
+            const yamlInput = document.getElementById('yamlInput').value;
+            const data = jsyaml.load(yamlInput);
+
+            const nodes = data.nodes.map(node => ({
+                id: node.id,
+                label: node.id
+            }));
+
+            const edges = data.edges.map(edge => ({
+                from: edge.from.id,
+                to: edge.to.id
+            }));
+
+            const container = document.getElementById('mynetwork');
+            const networkData = {
+                nodes: new vis.DataSet(nodes),
+                edges: new vis.DataSet(edges)
+            };
+
+            const options = {
+                layout: {
+                    hierarchical: {
+                        direction: 'UD',
+                        sortMethod: 'directed',
+                        nodeSpacing: 150,
+                        levelSeparation: 150,
+                        shakeTowards: 'leaves'
+                    }
+                },
+                nodes: {
+                    shape: 'box',
+                    size: 30,
+                    font: {
+                        size: 14,
+                        color: '#000000'
+                    },
+                    color: {
+                        background: '#97C2FC',
+                        border: '#2B7CE9',
+                        highlight: {
+                            background: '#D2E5FF',
+                            border: '#2B7CE9'
+                        }
+                    }
+                },
+                edges: {
+                    color: {
+                        color: '#848484',
+                        highlight: '#FF0000'
+                    },
+                    arrows: {
+                        to: {
+                            enabled: true,
+                            scaleFactor: 0.5
+                        }
+                    },
+                    smooth: {
+                        enabled: true,
+                        type: 'cubicBezier',
+                        roundness: 0.4
+                    }
+                },
+                interaction: {
+                    hover: true,
+                    navigationButtons: true,
+                    keyboard: true
+                },
+                physics: {
+                    hierarchicalRepulsion: {
+                        centralGravity: 0.0,
+                        springLength: 100,
+                        springConstant: 0.01,
+                        nodeDistance: 120,
+                        damping: 0.09
+                    },
+                    enabled: true
+                }
+            };
+
+            const network = new vis.Network(container, networkData, options);
+        }
+    </script>
+</body>
+</html>

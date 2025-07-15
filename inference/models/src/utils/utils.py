@@ -63,15 +63,18 @@ def load_numpy_as_tensor(file_path: str, device: torch.device = None,
     
     # Convert to PyTorch tensor and ensure float32
     tensor = torch.from_numpy(numpy_array).float()
-    
-    # Apply transformations to match the expected format
-    if permute_to_chw and tensor.dim() == 3:
-        # Permute from HWC to CHW: [H, W, C] -> [C, H, W]
-        tensor = tensor.permute(2, 0, 1)
-    
-    if add_batch_dim:
-        # Add batch dimension: [C, H, W] -> [B, C, H, W]
-        tensor = tensor.unsqueeze(0)
+
+    ## check shape
+    if not (tensor.shape[0]==1) & (tensor.shape[1]==3) & (tensor.shape[2]==1024):
+        # Apply transformations to match the expected format
+        if permute_to_chw and tensor.dim() == 3:
+            # Permute from HWC to CHW: [H, W, C] -> [C, H, W]
+            tensor = tensor.permute(2, 0, 1)
+
+        
+        if (add_batch_dim==True) & (tensor.dim()==3):
+            # Add batch dimension: [C, H, W] -> [B, C, H, W]
+            tensor = tensor.unsqueeze(0)
     
     if device is not None:
         tensor = tensor.to(device)
