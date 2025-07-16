@@ -16,7 +16,7 @@
     "value": "L2A"
   },
   "max_cloud_cover":{
-    "type":"numeric",
+    "type":"integer",
     "value": 20
   }
 }

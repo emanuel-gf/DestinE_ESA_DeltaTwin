@@ -35,8 +35,8 @@
             "description": "A Numpy ndarray with postprocess for all bands. Refering to the Predicted Tensor"
         },
         "origin_postprocessed": {
-        "type":"Data",
-        "description":"A Numpy ndarray with postprocess for all bands. Refering to the Origin Tensor"}
+            "type":"Data",
+             "description":"A Numpy ndarray with postprocess for all bands. Refering to the Origin Tensor"}
     },
     "models": {
         "postprocessing": {

@@ -30,10 +30,10 @@
         },
         "bbox":{
             "type":"string",
-            "description:": "A bbox for querying S2 images. lon_min, lat_min, lon_max, lat_max. (e.g:3.2833,45.3833,11.2,50.1833)  "
+            "description": "A bbox for querying S2 images. lon_min, lat_min, lon_max, lat_max. (e.g:3.2833,45.3833,11.2,50.1833)  "
         },
         "max_cloud_cover":{
-            "type":"string",
+            "type":"integer",
             "description": "A numerical value representing the maximum cloud cover for the queried scene. e.g 20"
         }
     },
@@ -71,22 +71,19 @@
     },
     "models": {
         "inference": {
-            "path": "models",
+            "path": "models/src",
             "type": "python",
             "parameters": {
                 "pythonVersion": "3.12.2",
                 "pipRequirements": [
-                { "name": "numpy", "version": "1.26.4" },
-                { "name": "pandas", "version": "2.2.3" },
-                { "name": "pystac-client", "version": "0.8.6" },
-                {"name":"pystac", "version":"1.13.0"},
-                { "name": "dotenv", "version": "0.9.9" },
+               { "name": "numpy", "version": "1.26.4" },
+                { "name": "python-dotenv", "version": "1.1.0" },
                 { "name": "loguru", "version": "0.7.3" },
                 { "name": "PyYAML", "version": "6.0.1" },
-                {"name": "Pillow", "version": "10.1.0"},
-                {"name": "boto3","version": "1.34.20"},
-                {"name": "lxml",  "version": "5.3.1"}
-
+                {"name": "torch", "version": "2.6.0" },
+                {"name": "segmentation-models-pytorch","version": "0.4.0"},
+                {"name": "timm", "version": "1.0.15" },
+                {"name": "opencv-python-headless", "version": "4.11.0.86"}
                 ],
                 "hardwareRequirements": {
                     "cpu": "4000m",
@@ -113,16 +110,16 @@
             "version":"0.4"
         },
         "get_sen2_products":{
-            "id": "get_sen2_products_from_s3_single",
+            "id": "get-sen2-products-from-s3-single",
             "version": "0.1"
         },
         "preprocessing":{
-            "id": "preprocessing_s2_ai_atmospheric_correction",
-            "version": "0.1"
+            "id": "preprocessing-s2-ai-atmospheric-correction",
+            "version": "0.2"
         },
         "postprocessing":{
-            "id":"postprocessing_s2_ai_atmospheric_correction",
-            "version": "0.1"
+            "id":"postprocessing-s2-ai-atmospheric-correction",
+            "version": "0.2"
         },
         "generate_plot":{
             "id": "generate-plot-s2-ai-atmo-correc",
