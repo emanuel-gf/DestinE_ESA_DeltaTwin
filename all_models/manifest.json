@@ -1,0 +1,197 @@
+{
+    "name": "end-to-end-s2-processor-ai-atmo-correction",
+    "description": "End to end s2 processor with AI to atmospheric correction of Sentinel L1C to L2A.",
+    "license": {
+        "name": "LGPLv3",
+        "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
+        "description": "",
+        "copyrights": [
+            {
+                "years": [
+                    2025
+                ],
+                "company": "European Space Agency"
+            }
+        ]
+    },
+    "owner": "sebastien.tetauld, emanuel.goulart",
+    "inputs": {
+        "cdse_key": {
+            "type": "string",
+            "description": "CDSE ACCESS_KEY_ID"
+        },
+        "cdse_secret": {
+            "type": "string",
+            "description": "CDSE SECRET ACCESS KEY"
+        },
+        "bands":{
+            "type":"string",
+            "description":"Sentinel-2 Bands (e.g: B02,B03,B04)"
+        },
+        "bbox":{
+            "type":"string",
+            "description": "A bbox for querying S2 images. lon_min, lat_min, lon_max, lat_max. (e.g:3.2833,45.3833,11.2,50.1833)  "
+        },
+        "max_cloud_cover":{
+            "type":"integer",
+            "description": "A numerical value representing the maximum cloud cover for the queried scene. e.g 20"
+        }
+    },
+    "outputs": {
+            "L2A_B02": {
+                "type": "Data",
+                "description": "L2A B02"
+            },
+            "L2A_B03": {
+                "type": "Data",
+                "description": "L2A B03"
+            },
+            "L2A_B04": {
+                "type": "Data",
+                "description": "L2A B04"
+            },
+            "L2A_TCI": {
+                "type": "Data",
+                "description": "L2A TCI"
+            },
+            "metrics": {
+                "type": "Data",
+                "description": "Metrics"
+            }
+    },
+    "resources":{
+        "product_level_l1c":{
+            "type":"string",
+            "value":"L1C"
+        },
+        "product_level_l2a":{
+            "type":"string",
+            "value":"L2A"
+        }
+    },
+    "models": {
+        "preprocessing": {
+            "path": "preprocessing/models/src",
+            "type": "python",
+            "parameters": {
+                "pythonVersion": "3.12.2",
+                "pipRequirements": [
+                { "name": "numpy", "version": "1.26.4" },
+                { "name": "dotenv", "version": "0.9.9" },
+                { "name": "loguru", "version": "0.7.3" },
+                {"name": "timm", "version": "1.0.15" },
+                {"name": "opencv-python-headless", "version": "4.10.0.84"},
+                {"name": "lxml", "version": "5.3.1"},
+                {"name":"Pillow", "version": "10.1.0"}
+                ],
+                "hardwareRequirements": {
+                    "cpu": "3000m",
+                    "ram": "4Gi"
+                },
+                "command": "python main.py $(inputs.s2_raw)"
+            },
+            "inputs": {
+                "s2_raw": {
+                    "type": "string"
+                }
+            },
+            "outputs": {
+                "x_tensor": {
+                    "type": "Data",
+                    "glob": "s2_preprocessed.npz"
+                },
+                "valid_mask":{
+                    "type": "Data",
+                    "glob": "valid_mask_preprocessed.npz"
+                }
+            }
+        },
+        "postprocessing": {
+            "path": "postprocessing/models/src",
+            "type": "python",
+            "parameters": {
+                "pythonVersion": "3.12.2",
+                "pipRequirements": [
+                    {"name":"numpy", "version": "2.3.0"},
+                    {"name": "docstring-parser", "version": "0.16"},
+                    {"name": "dotenv", "version": "0.9.9"},
+                    {"name": "loguru","version": "0.7.3"},
+                    {"name": "timm",  "version": "1.0.15"}
+                ],
+                "hardwareRequirements": {
+                    "cpu": "2000m",
+                    "ram": "3Gi"
+                },
+                "command": "python main.py $(inputs.pred_tensor) $(inputs.origin_tensor) $(inputs.valid_mask)"
+            },
+            "inputs": {
+                "pred_tensor": {
+                    "type": "string"
+                },
+                "origin_tensor":{
+                    "type":"string"
+                },
+                "valid_mask":{
+                    "type":"string"
+                }
+            },
+            "outputs": {
+                "pred_postprocessed": {
+                    "type": "Data",
+                    "glob": "pred_post_np.npz"
+                },
+                "origin_postprocessed":{
+                    "type": "Data",
+                    "glob": "x_post_np.npz"
+                }
+            }
+        },
+        "inference": {
+            "path": "inference/models/src",
+            "type": "python",
+            "parameters": {
+                "pythonVersion": "3.12.2",
+                "pipRequirements": [
+               { "name": "numpy", "version": "1.26.4" },
+                { "name": "python-dotenv", "version": "1.1.0" },
+                { "name": "loguru", "version": "0.7.3" },
+                { "name": "PyYAML", "version": "6.0.1" },
+                {"name": "torch", "version": "2.6.0" },
+                {"name": "segmentation-models-pytorch","version": "0.4.0"},
+                {"name": "timm", "version": "1.0.15" },
+                {"name": "opencv-python-headless", "version": "4.11.0.86"}
+                ],
+                "hardwareRequirements": {
+                    "cpu": "4000m",
+                    "ram": "9Gi"
+                },
+                "command": "python main.py $(inputs.cdse_key) $(inputs.cdse_secret) $(inputs.bands) $(inputs.product_level) $(inputs.stac_item)"
+            },
+            "inputs": {
+                "s2_preprocessed": {
+                    "type": "string"
+                }
+            },
+            "outputs": {
+                "pred_tensor": {
+                    "type": "Data",
+                    "glob": "pred_tensor.npz"
+                }
+            }
+        }
+    },
+    "dependencies":{
+        "stac_query_most_recent":{
+            "id":"stac_query_most_recent",
+            "version":"0.4"
+        },
+        "get_sen2_products":{
+            "id": "get-sen2-products-from-s3-single",
+            "version": "0.1"
+        },
+        "generate_plot":{
+            "id": "generate-plot-s2-ai-atmo-correc",
+            "version":"0.1"
+        }
+    }
+}

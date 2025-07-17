@@ -30,7 +30,7 @@ nodes:
   - id: generate_plot
     ref: dependencies.generate_plot ##end of dependencies
   - id: inference
-    ref: models.get_product ## model
+    ref: models.inference ## model
   - id: output_b02
     ref : outputs.L2A_B02
   - id: output_b03

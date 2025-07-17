@@ -1,0 +1,22 @@
+{
+  "cdse_key": {
+      "type": "string",
+      "value": ""
+  },
+  "cdse_secret": {
+      "type": "string",
+      "value": ""
+  },
+  "bands":{
+      "type":"string",
+      "value": "B02,B03,B04"
+  },
+  "bbox":{
+    "type":"string",
+    "value": "L2A"
+  },
+  "max_cloud_cover":{
+    "type":"integer",
+    "value": 20
+  }
+}
