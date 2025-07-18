@@ -4,7 +4,7 @@ nodes:
   - id: cdse_secret
     ref: inputs.cdse_secret
   - id: bands
-    ref: inputs.bands
+    ref: resources.bands
   - id: bbox
     ref: inputs.bbox
   - id: max_cloud_cover

@@ -1,6 +1,6 @@
 {
     "name": "end-to-end-s2-processor-ai-atmo-correction",
-    "description": "End to end Sentinel-2 processor for atmospheric correction of L1C product to L2A. The model uses AI to predict the atmospheric correction, querying the most recent S2 image available at STAC catalog and returning a image for all the Bands variables as well a file containing metrics of the model inference. ",
+    "description": "End to end Sentinel-2 processor for atmospheric correction of L1C product to L2A. The model uses AI to predict the atmospheric correction, querying the most recent S2 image available at STAC catalog, it returns an image for each band, a true color image (TCI) as well a file containing metrics of the model inference. ",
     "license": {
         "name": "LGPLv3",
         "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
@@ -24,11 +24,6 @@
             "type": "secret",
             "description": "CDSE - SECRET ACCESS KEY"
         },
-        "bands":{
-            "type":"string",
-            "description":"Sentinel-2 Bands: (e.g: B02,B03,B04 )",
-            "value": "B02,B03,B04"
-        },
         "bbox":{
             "type":"string",
             "description": "A bbox for querying S2 images. lon_min, lat_min, lon_max, lat_max (e.g: 3.2833,45.3833,11.2,50.1833) ",
@@ -36,8 +31,7 @@
         },
         "max_cloud_cover":{
             "type":"integer",
-            "description": "A numerical value representing the maximum cloud cover for the queried scene. (e.g: 20 )",
-            "value": "20"
+            "description": "A numerical value representing the maximum cloud cover for the queried scene. (e.g: 20 )"
         }
     },
     "outputs": {
@@ -63,6 +57,10 @@
             }
     },
     "resources":{
+        "bands":{
+            "type":"string",
+            "value": "B02,B03,B04"
+        },
         "product_level_l1c":{
             "type":"string",
             "value":"L1C"
@@ -186,7 +184,7 @@
     "dependencies":{
         "stac_query_most_recent":{
             "id":"stac_query_most_recent",
-            "version":"0.4"
+            "version":"0.5"
         },
         "get_sen2_products":{
             "id": "get-sen2-products-from-s3-single",
