@@ -17,15 +17,15 @@
     "owner": "sebastien.tetauld , emanuel.goulart",
     "inputs": {
         "pred_np": {
-            "type": "string",
+            "type": "Data",
             "description": "Prediction from Inference of AI model."
         },
         "x_np": {
-            "type": "string",
+            "type": "Data",
             "description": "X ndarray."
         },
         "gt_np":{
-            "type":"string",
+            "type":"Data",
             "description":"Ground truth."
         },
         "bands":{
@@ -77,11 +77,11 @@
             },
             "inputs": {
                 "pred_np": {
-                    "type": "string"},
+                    "type": "Data"},
                 "x_np": {
-                    "type": "string"},
+                    "type": "Data"},
                 "gt_np":{
-                    "type":"string"},
+                    "type":"Data"},
                 "bands":{
                     "type":"string"}
             },
