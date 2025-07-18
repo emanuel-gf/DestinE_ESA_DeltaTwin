@@ -37,7 +37,7 @@
         "max_cloud_cover":{
             "type":"integer",
             "description": "A numerical value representing the maximum cloud cover for the queried scene. (e.g: 20 )",
-            "value": 20
+            "value": "20"
         }
     },
     "outputs": {
