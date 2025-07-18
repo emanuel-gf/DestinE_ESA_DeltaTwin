@@ -1,6 +1,6 @@
 {
     "name": "end-to-end-s2-processor-ai-atmo-correction",
-    "description": "End to end s2 processor with AI to atmospheric correction of Sentinel L1C to L2A.",
+    "description": "End to end Sentinel-2 processor for atmospheric correction of L1C product to L2A. The model uses AI to predict the atmospheric correction, querying the most recent S2 image available at STAC catalog and returning a image for all the Bands variables as well a file containing metrics of the model inference. ",
     "license": {
         "name": "LGPLv3",
         "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
@@ -18,23 +18,26 @@
     "inputs": {
         "cdse_key": {
             "type": "secret",
-            "description": "CDSE ACCESS_KEY_ID"
+            "description": "CDSE - ACCESS KEY ID"
         },
         "cdse_secret": {
             "type": "secret",
-            "description": "CDSE SECRET ACCESS KEY"
+            "description": "CDSE - SECRET ACCESS KEY"
         },
         "bands":{
             "type":"string",
-            "description":"Sentinel-2 Bands (e.g: B02,B03,B04)"
+            "description":"Sentinel-2 Bands: (e.g: B02,B03,B04 )",
+            "value": "B02,B03,B04"
         },
         "bbox":{
             "type":"string",
-            "description": "A bbox for querying S2 images. lon_min, lat_min, lon_max, lat_max. (e.g:3.2833,45.3833,11.2,50.1833)  "
+            "description": "A bbox for querying S2 images. lon_min, lat_min, lon_max, lat_max (e.g: 3.2833,45.3833,11.2,50.1833) ",
+            "value":  "3.2833,45.3833,11.2,50.1833"
         },
         "max_cloud_cover":{
             "type":"integer",
-            "description": "A numerical value representing the maximum cloud cover for the queried scene. e.g 20"
+            "description": "A numerical value representing the maximum cloud cover for the queried scene. (e.g: 20 )",
+            "value": 20
         }
     },
     "outputs": {
