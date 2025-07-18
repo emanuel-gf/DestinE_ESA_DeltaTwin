@@ -79,6 +79,12 @@ edges:
     to:
       id: get_sen2_products_l1c
       port: stac_item ## End INPUT DEPENDENCIES 
+  - from:   
+      id: stac_query_most_recent 
+      port: stac_items
+    to:
+      id: get_sen2_products_l2a
+      port: stac_item 
   - from: ## GET S2 PRODUCT_L2A
       id: cdse_key
     to:
@@ -99,12 +105,6 @@ edges:
     to:
       id: get_sen2_products_l2a
       port: product_level  
-  - from:   
-      id: stac_query_most_recent ## Run Dependency STAC and output to next dependency 
-      port: stac_items
-    to:
-      id: get_sen2_products_l1c
-      port: stac_item ## End INPUT DEPENDENCIES 
     ## PREPROCESSING L1C - INPUT 
   - from:
       id: get_sen2_products_l1c

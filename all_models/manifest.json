@@ -17,11 +17,11 @@
     "owner": "sebastien.tetauld, emanuel.goulart",
     "inputs": {
         "cdse_key": {
-            "type": "string",
+            "type": "secret",
             "description": "CDSE ACCESS_KEY_ID"
         },
         "cdse_secret": {
-            "type": "string",
+            "type": "secret",
             "description": "CDSE SECRET ACCESS KEY"
         },
         "bands":{
@@ -92,7 +92,7 @@
             },
             "inputs": {
                 "s2_raw": {
-                    "type": "string"
+                    "type": "Data"
                 }
             },
             "outputs": {
@@ -126,13 +126,13 @@
             },
             "inputs": {
                 "pred_tensor": {
-                    "type": "string"
+                    "type": "Data"
                 },
                 "origin_tensor":{
-                    "type":"string"
+                    "type":"Data"
                 },
                 "valid_mask":{
-                    "type":"string"
+                    "type":"Data"
                 }
             },
             "outputs": {
@@ -165,11 +165,11 @@
                     "cpu": "4000m",
                     "ram": "9Gi"
                 },
-                "command": "python main.py $(inputs.cdse_key) $(inputs.cdse_secret) $(inputs.bands) $(inputs.product_level) $(inputs.stac_item)"
+                "command": "python main.py $(inputs.s2_preprocessed)"
             },
             "inputs": {
                 "s2_preprocessed": {
-                    "type": "string"
+                    "type": "Data"
                 }
             },
             "outputs": {
@@ -187,11 +187,11 @@
         },
         "get_sen2_products":{
             "id": "get-sen2-products-from-s3-single",
-            "version": "0.1"
+            "version": "0.2"
         },
         "generate_plot":{
             "id": "generate-plot-s2-ai-atmo-correc",
-            "version":"0.1"
+            "version":"0.3"
         }
     }
 }
