@@ -17,7 +17,7 @@ edges:
       id: max_cloud_cover
     to:
       id: stac_query
-      port: max_cloud_covery
+      port: max_cloud_cover
   - from:  ## Important!! 
       id: stac_query  # From models - Source Node of the edge
       port: stac_items   #Output of the model described on the manifest
