@@ -1,5 +1,5 @@
 {
-    "name": "get-sen2-products-from-s3",
+    "name": "get-sen2-product",
     "description": "Prototype version of querying STAC catalog for most recent Sentinel-2 L1C and L2A items.",
     "license": {
         "name": "LGPLv3",
@@ -27,26 +27,20 @@
         "bands":{
             "type":"string",
             "description":"Sentinel-2 Bands (e.g: B02,B03,B04)"
+        },
+        "product_level":{
+            "type":"string",
+            "description":"Level of processing for Sentinel-2 (e.g: L2A OR L1C)"
+        },
+        "stac_item":{
+            "type":"Data",
+            "description":"A STAC ITEM transformed in a dictionary and stored on a json."
         }
     },
     "outputs": {
-        "l1c_raw": {
+        "s2_raw": {
             "type": "Data",
             "description": "A np.ndarray compressed format representing L1C product"
-        }
-    },
-    "resources":{
-        "product_level_l1c":{
-            "type":"string",
-            "value":"L1C"
-        },
-        "bbox":{
-            "type":"string",
-            "value":"3.2833,45.3833,11.2,50.1833"
-        },
-        "max_cloud_cover":{
-            "type":"number",
-            "value":20
         }
     },
     "models": {
@@ -84,24 +78,18 @@
                     "type": "string"
                 },
                 "product_level":{
-                    "type": "string"
+                    "type":"string"
                 },
                 "stac_item":{
-                    "type": "Data"
+                    "type":"Data"
                 }
             },
             "outputs": {
-                "l1c_raw": {
+                "s2_raw": {
                     "type": "Data",
                     "glob": "s2_raw.npz"
                 }
             }
-        }
-    },
-    "dependencies":{
-        "stac_query_most_recent":{
-            "id":"stac_query_most_recent",
-            "version":"0.6"
         }
     }
 }

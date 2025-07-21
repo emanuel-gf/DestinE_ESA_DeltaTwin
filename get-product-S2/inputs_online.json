@@ -1,22 +1,22 @@
 {
   "cdse_key": {
-      "type": "secret",
-      "secret_value": ""
+      "type": "string",
+      "value": ""
   },
   "cdse_secret": {
-      "type": "secret",
-      "secret_value": ""
+      "type": "string",
+      "value": ""
   },
   "bands":{
       "type":"string",
-      "value": "B02,B03"
+      "value": "B02,B03,B04"
   },
   "product_level":{
     "type":"string",
     "value": "L2A"
   },
   "stac_item":{
-    "type":"string",
+    "type":"Data",
     "value": "stac_items.json"
   }
 }

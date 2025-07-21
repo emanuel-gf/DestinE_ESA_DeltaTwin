@@ -27,9 +27,11 @@ warnings.filterwarnings('ignore')
 
 def parse_arguments() -> argparse.Namespace:
     """
+    Parse command line arguments using argparse.
+    This is the most Pythonic way to handle command-line arguments.
     """
     parser = argparse.ArgumentParser(
-        description="S3 bucket - Get Sentinel 2 Products - Select Bands and Product Level",
+        description="S3 bucket - Get Sentinel 2 Products",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     
@@ -78,7 +80,6 @@ def initialize_env(key_id:str, secret_key: str, bands_str: str, product_level=st
         return {}
 
 
-
 def main() -> None:
     # Set up logging
     logger.add("Get-SEN2-Product-from-S3bucket.log", rotation="10 MB")
@@ -87,6 +88,7 @@ def main() -> None:
     # Load environment and configs
     args = parse_arguments()
 
+    logger.info(f"Parsed arguments: {args}")
     # Initialize environment with parsed arguments
     env = initialize_env(
         key_id=args.cdse_key,
@@ -106,7 +108,7 @@ def main() -> None:
 
     logger.debug(f"Name of the variables from environment: Bands:{bands} Product_level{product_level} Stac_json{path_stac_json}")
     
-    model_cfg = load_config(f"{dir_path}/src/cfg/config.yaml")
+
     query_cfg = load_config(f"{dir_path}/src/cfg/query_config.yaml")
 
     # Setup
@@ -124,11 +126,11 @@ def main() -> None:
     ## Capital Letters
     product_level = str(product_level.upper())
     Sentinel_item = pystac.Item.from_dict(data_stac[product_level])
-    #l2a_item = pystac.Item.from_dict(data_stac['L2A'])
+
 
     ## Load from S3 - SERVICE
     Sentinel_raw_data = load_bands_from_s3(s3_client, bucket_name, Sentinel_item, bands, product_level=product_level)
-    #l2a_raw_data = load_bands_from_s3(s3_client, bucket_name, l2a_item, bands, product_level="L2A")
+
 
     ## Save the S2 image as a np compressed format. At the Root 
     filename_output = f"./s2_raw"
@@ -137,12 +139,10 @@ def main() -> None:
 
     try:
         np.savez_compressed(filename_output, array=Sentinel_raw_data)
-        #np.savez_compressed(filename_l2a, array=l2a_raw_data)
-    
     except Exception as e:
-        logger.error(f"Failed to generate json: {e}")
+        logger.error(f"Failed to save file: {e}")
 
-    logger.success("Workflow - Get Product - completed!")
+    logger.success("Workflow completed!")
 
 
 if __name__ == "__main__":

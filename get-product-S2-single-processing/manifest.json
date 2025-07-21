@@ -1,5 +1,5 @@
 {
-    "name": "get-sen2-products-from-s3-single",
+    "name": "get-sen2-product-S2-single-processing",
     "description": "Prototype version of querying STAC catalog for most recent Sentinel-2 L1C and L2A items.",
     "license": {
         "name": "LGPLv3",
@@ -17,11 +17,11 @@
     "owner": "emanuel.goulart",
     "inputs": {
         "cdse_key": {
-            "type": "string",
+            "type": "secret",
             "description": "CDSE ACCESS_KEY_ID"
         },
         "cdse_secret": {
-            "type": "string",
+            "type": "secret",
             "description": "CDSE SECRET ACCESS KEY"
         },
         "bands":{
@@ -69,10 +69,10 @@
             },
             "inputs": {
                 "cdse_key": {
-                    "type": "string"
+                    "type": "secret"
                 },
                 "cdse_secret": {
-                    "type": "string"
+                    "type": "secret"
                 },
                 "bands": {
                     "type": "string"

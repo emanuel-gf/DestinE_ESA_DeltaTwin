@@ -16,9 +16,9 @@ nodes:
   - id: stac_query_most_recent
     ref: dependencies.stac_query_most_recent
   - id: get_sen2_products_l1c
-    ref: dependencies.get_sen2_products
+    ref: dependencies.get_sen2_product
   - id: get_sen2_products_l2a
-    ref: dependencies.get_sen2_products 
+    ref: dependencies.get_sen2_product 
   - id: preprocessing_l1c
     ref: models.preprocessing
   - id: preprocessing_l2a
@@ -108,14 +108,14 @@ edges:
     ## PREPROCESSING L1C - INPUT 
   - from:
       id: get_sen2_products_l1c
-      port: S2_raw
+      port: s2_raw
     to: 
       id: preprocessing_l1c
       port: s2_raw
     ## PREPROCESSING L2A - INPUT
   - from:
       id: get_sen2_products_l2a
-      port: S2_raw
+      port: s2_raw
     to:
       id: preprocessing_l2a
       port: s2_raw

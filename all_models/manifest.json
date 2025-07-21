@@ -17,11 +17,11 @@
     "owner": "sebastien.tetauld, emanuel.goulart",
     "inputs": {
         "cdse_key": {
-            "type": "secret",
+            "type": "string",
             "description": "CDSE - ACCESS KEY ID"
         },
         "cdse_secret": {
-            "type": "secret",
+            "type": "string",
             "description": "CDSE - SECRET ACCESS KEY"
         },
         "bbox":{
@@ -184,11 +184,11 @@
     "dependencies":{
         "stac_query_most_recent":{
             "id":"stac_query_most_recent",
-            "version":"0.5"
+            "version":"0.6"
         },
-        "get_sen2_products":{
-            "id": "get-sen2-products-from-s3-single",
-            "version": "0.2"
+        "get_sen2_product":{
+            "id": "get-sen2-product",
+            "version": "0.4"
         },
         "generate_plot":{
             "id": "generate-plot-s2-ai-atmo-correc",
